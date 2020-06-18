@@ -6,6 +6,6 @@ namespace MinimumRoute
 {
     public interface IFileSystem
     {
-        string[] ReadAllLines(string path);
+        string ReadAllLines(string path);
     }
 }

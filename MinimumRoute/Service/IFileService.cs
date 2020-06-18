@@ -4,6 +4,6 @@ namespace MinimumRoute.Service
 {
     public interface IFileService
     {
-        List<string> ReadFile(string path);
+        string ReadFile(string path);
     }
 }

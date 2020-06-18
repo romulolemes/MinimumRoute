@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using MinimumRoute.Binder;
 using MinimumRoute.Builder;
 using MinimumRoute.Data;
 using MinimumRoute.Repository;
 using MinimumRoute.Service;
+using MinimumRoute.ViewModel;
 using Serilog;
 using Serilog.Extensions.Logging;
 using System;
@@ -29,12 +31,19 @@ namespace MinimumRoute
             {
                 Log.Information("Starting application");
                 var fileService = _serviceProvider.GetService<IFileService>();
-                var builderRoute = _serviceProvider.GetService<IBuilderListRoutes>();
+                var binderModel = _serviceProvider.GetService<IBinderModel>();
 
                 var rowsRoutes = fileService.ReadFile("./trechos.txt");
-                var routes = builderRoute.CreateListRoutes(rowsRoutes);
+                var rowsRoutes = fileService.ReadFile("./trechos.txt");
 
-                
+
+
+                var routesViewModel = binderModel.BindList<RouteViewModel>(rowsRoutes);
+                Log.Information("{@Routes}", routesViewModel);
+
+
+
+
 
                 Log.Information("All done!");
             }
@@ -59,6 +68,7 @@ namespace MinimumRoute
                 .AddTransient<IFileService, FileService>()
                 .AddTransient<IBuilderListRoutes, BuilderListRoutes>()
                 .AddTransient<IFileSystem, FileSystem>()
+                .AddTransient<IBinderModel, BinderModel>()
                 .BuildServiceProvider();
         }
     }

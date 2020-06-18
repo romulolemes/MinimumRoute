@@ -4,9 +4,9 @@ namespace MinimumRoute
 {
     public class FileSystem : IFileSystem
     {
-        public string[] ReadAllLines(string path)
+        public string ReadAllLines(string path)
         {
-            return File.ReadAllLines(path);
+            return File.ReadAllText(path);
         }
     }
 }

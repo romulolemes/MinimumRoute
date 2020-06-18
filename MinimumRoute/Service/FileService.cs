@@ -14,7 +14,7 @@ namespace MinimumRoute.Service
             _fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
         }
 
-        public List<string> ReadFile(string path)
+        public string ReadFile(string path)
         {
             return _fileSystem.ReadAllLines(path)
                 .ToList();
