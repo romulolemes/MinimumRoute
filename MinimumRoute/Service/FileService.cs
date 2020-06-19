@@ -18,5 +18,10 @@ namespace MinimumRoute.Service
         {
             return _fileSystem.ReadAllLines(path);
         }
+
+        public void WriteFile(string path, string content)
+        {
+            _fileSystem.WriteAllText(path, content);
+        }
     }
 }

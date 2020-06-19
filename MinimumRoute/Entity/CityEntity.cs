@@ -21,7 +21,7 @@ namespace MinimumRoute.Model
 
         public override string ToString()
         {
-            return $"City {Name}-{Code}";
+            return $"{Name}-{Code}";
         }
     }
 }

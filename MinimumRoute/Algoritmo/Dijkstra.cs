@@ -1,4 +1,5 @@
-﻿using MinimumRoute.Model;
+﻿using MinimumRoute.Entity;
+using MinimumRoute.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -119,7 +120,7 @@ namespace MinimumRoute.Algoritmo
             }
         }
 
-        public CityEntity[] FindShortestPath(CityEntity @from, CityEntity to)
+        public PathEntity FindShortestPath(CityEntity @from, CityEntity to)
         {
             var control = new VisitingData();
 
@@ -149,9 +150,22 @@ namespace MinimumRoute.Algoritmo
                 }
             }
 
-            return control.HasComputedPathToOrigin(to)
-                ? control.ComputedPathToOrigin(to).Reverse().ToArray()
-                : null;
+            PathEntity pathEntity;
+
+            if (control.HasComputedPathToOrigin(to))
+            {
+                pathEntity = new PathEntity
+                {
+                    CitiesVisit = control.ComputedPathToOrigin(to).Reverse().ToList(),
+                    Distance = control.QueryWeight(to).Value
+                };
+            }
+            else
+            {
+                pathEntity = new PathEntity();
+            }
+
+            return pathEntity;
         }
     }
 }

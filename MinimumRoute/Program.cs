@@ -20,7 +20,7 @@ namespace MinimumRoute
         static void Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
-              .WriteTo.File("MinimumRoute.log")
+              .WriteTo.File(@"Log\MinimumRoute.log")
               .WriteTo.Console()
               .MinimumLevel.Debug()
               .CreateLogger();
@@ -40,17 +40,15 @@ namespace MinimumRoute
                 var streamRoutes = fileService.ReadFile("./trechos.txt");
                 var streamOrders = fileService.ReadFile("./encomendas.txt");
 
-                var routesViewModel = binderModel.BindListModel<RouteViewModel>(streamRoutes);
-                var ordersViewModel = binderModel.BindListModel<OrderViewModel>(streamOrders);
+                var routesViewModel = binderModel.SerializeList<RouteViewModel>(streamRoutes);
+                var ordersViewModel = binderModel.SerializeList<OrderViewModel>(streamOrders);
                 
 
                 routeService.CreateListRoutes(routesViewModel);
+                var paths = ordersViewModel.Select(order => finder.FindShortestPath(cityService.FindByCode(order.CityOrigin), cityService.FindByCode(order.CityDestination)));
 
-                foreach (var order in ordersViewModel)
-                {
-                    var path = finder.FindShortestPath(cityService.FindByCode(order.CityOrigin), cityService.FindByCode(order.CityDestination));
-                    Log.Information("Origin:{Origin} Destination:{Destination} Path:{@Path}", order.CityOrigin, order.CityDestination, path.Select(c => c.Code));
-                }
+                var textPaths = binderModel.Deserialize(paths);
+                fileService.WriteFile("./rotas.txt", textPaths);
 
                 Log.Information("All done!");
             }

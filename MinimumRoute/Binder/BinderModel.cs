@@ -1,18 +1,21 @@
 ﻿using Microsoft.VisualBasic;
+using MinimumRoute.Entity;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace MinimumRoute.Binder
 {
     public class BinderModel : IBinderModel
     {
-        private const string SEPARATE_FIELD = @"[\s]+";
+        private const string SEPARATE_FIELD = " ";
+        private const string SEPARATE_FILED_REGEX = @"[\s]+";
 
-        public List<T> BindListModel<T>(string allText)
+        public List<T> SerializeList<T>(string allText)
         {
             string[] lines = allText.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
             return lines.Select(line => BindModel<T>(line)).ToList();
@@ -20,10 +23,9 @@ namespace MinimumRoute.Binder
 
         public T BindModel<T>(string line)
         {
-            var type = typeof(T);
-            var resultSplit = Regex.Split(line, SEPARATE_FIELD, RegexOptions.IgnoreCase).ToList();
+            var resultSplit = Regex.Split(line, SEPARATE_FILED_REGEX, RegexOptions.IgnoreCase).ToList();
             object instance = Activator.CreateInstance<T>();
-            var propPublics = type.GetProperties(BindingFlags.Public | BindingFlags.Instance
+            var propPublics = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance
                 /*| BindingFlags.SetField | BindingFlags.SetProperty*/);
 
             foreach (var (propertyInfo, index) in propPublics.Select((x, i) => (x, i)))
@@ -36,6 +38,26 @@ namespace MinimumRoute.Binder
             }
 
             return (T)instance;
+        }
+
+        public string Deserialize(IEnumerable<PathEntity> pathEntities)
+        {
+            StringBuilder textDeserialize = new StringBuilder();
+            foreach (var path in pathEntities)
+            {
+                foreach (var city in path.CitiesVisit)
+                {
+                    textDeserialize.Append(DeserializeField(city.Code));
+                }
+                textDeserialize.Append(DeserializeField(path.Distance));
+                textDeserialize.Append(Environment.NewLine);
+            }
+            return textDeserialize.ToString();
+        }
+
+        private string DeserializeField(object @object)
+        {
+            return @object.ToString() + SEPARATE_FIELD;
         }
     }
 }
