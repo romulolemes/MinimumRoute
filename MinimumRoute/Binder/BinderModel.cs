@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,26 +10,32 @@ namespace MinimumRoute.Binder
 {
     public class BinderModel : IBinderModel
     {
-        private const string SEPARATE = @"[\s]+";
+        private const string SEPARATE_FIELD = @"[\s]+";
 
-        public List<T> BindList<T>(List<string> rows)
+        public List<T> BindListModel<T>(string allText)
         {
-            return rows.Select(BindEntity<T>).ToList();
+            string[] lines = allText.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+            return lines.Select(line => BindModel<T>(line)).ToList();
         }
 
-        public T BindEntity<T>(string row)
+        public T BindModel<T>(string line)
         {
-            var resultSplit = Regex.Split(row, SEPARATE, RegexOptions.IgnoreCase).ToList();
-            T instance = Activator.CreateInstance<T>();
-
-            var propPublics = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var type = typeof(T);
+            var resultSplit = Regex.Split(line, SEPARATE_FIELD, RegexOptions.IgnoreCase).ToList();
+            object instance = Activator.CreateInstance<T>();
+            var propPublics = type.GetProperties(BindingFlags.Public | BindingFlags.Instance
+                /*| BindingFlags.SetField | BindingFlags.SetProperty*/);
 
             foreach (var (propertyInfo, index) in propPublics.Select((x, i) => (x, i)))
             {
-                propertyInfo.SetValue(instance, Convert.ChangeType(resultSplit.ElementAt(index), propertyInfo.PropertyType));
+                string field = null;
+                if (index < resultSplit.Count)
+                    field = resultSplit.ElementAt(index);
+
+                propertyInfo.SetValue(instance, Convert.ChangeType(field, propertyInfo.PropertyType));
             }
 
-            return instance;
+            return (T)instance;
         }
     }
 }

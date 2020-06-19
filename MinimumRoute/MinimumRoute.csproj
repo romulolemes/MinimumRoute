@@ -17,6 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="encomendas.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="trechos.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

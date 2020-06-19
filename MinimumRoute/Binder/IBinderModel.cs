@@ -4,7 +4,7 @@ namespace MinimumRoute.Binder
 {
     public interface IBinderModel
     {
-        T BindEntity<T>(string row);
-        List<T> BindList<T>(List<string> rows);
+        List<T> BindListModel<T>(string allText);
+        T BindModel<T>(string line);
     }
 }

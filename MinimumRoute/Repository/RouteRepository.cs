@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace MinimumRoute.Repository
 {
-    public class RouteRepository
+    public class RouteRepository : IRouteRepository
     {
         protected IContext _context;
 
@@ -14,7 +14,7 @@ namespace MinimumRoute.Repository
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public void AddRange(List<RouteEntity> routes)
+        public void AddRange(IEnumerable<RouteEntity> routes)
         {
             _context.Routes.AddRange(routes);
         }

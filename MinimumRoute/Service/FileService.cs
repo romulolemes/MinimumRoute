@@ -16,8 +16,7 @@ namespace MinimumRoute.Service
 
         public string ReadFile(string path)
         {
-            return _fileSystem.ReadAllLines(path)
-                .ToList();
+            return _fileSystem.ReadAllLines(path);
         }
     }
 }

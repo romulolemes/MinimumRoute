@@ -16,5 +16,10 @@ namespace MinimumRoute.Model
         public CityEntity CityOrigin { get; set; }
         public CityEntity CityDestination { get; set; }
         public int Distance { get; set; }
+
+        public override string ToString()
+        {
+            return $"From {CityOrigin} To {CityDestination} Distance:{Distance}";
+        }
     }
 }
