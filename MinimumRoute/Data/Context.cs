@@ -19,7 +19,7 @@ namespace MinimumRoute.Data
             Routes = new List<RouteEntity>();
         }
 
-        public virtual List<CityEntity> Cities { get; }
-        public virtual List<RouteEntity> Routes { get; }
+        public virtual IList<CityEntity> Cities { get; }
+        public virtual IList<RouteEntity> Routes { get; }
     }
 }

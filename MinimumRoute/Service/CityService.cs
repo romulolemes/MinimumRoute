@@ -16,7 +16,7 @@ namespace MinimumRoute.Service
         }
 
         //TODO: Olhar a possibilidade de testar se o parametro é null
-        public CityEntity FindByCode(string code)
+        public virtual CityEntity FindByCode(string code)
         {
             CityEntity cityEntity = _context.Cities.FirstOrDefault(c => c.Code.Equals(code));
             if (cityEntity != null)

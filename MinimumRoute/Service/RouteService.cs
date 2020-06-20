@@ -21,11 +21,12 @@ namespace MinimumRoute.Service
         {
             foreach (var route in routes)
             {
-                _context.Routes.Add(CreateRoute(route));
+                var routeEntity = CreateRoute(route);
+                _context.Routes.Add(routeEntity);
             }
         }
 
-        private RouteEntity CreateRoute(RouteViewModel routeViewModel)
+        public RouteEntity CreateRoute(RouteViewModel routeViewModel)
         {
             var cityOrigin = _cityService.FindByCode(routeViewModel.CityOrigin);
             var cityDestination = _cityService.FindByCode(routeViewModel.CityDestination);

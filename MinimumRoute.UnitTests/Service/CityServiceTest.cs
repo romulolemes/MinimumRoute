@@ -11,17 +11,18 @@ namespace MinimumRoute.UnitTests.Service
 {
     public class CityServiceTest
     {
-        private CityEntity cityExpected;
-        private CityService _cityService;
+        private readonly CityEntity cityExpected;
+        private readonly CityService _cityService;
+        private readonly Mock<Context> _mockContext;
 
         public CityServiceTest()
         {
             cityExpected = new CityEntity("Los Santos", "LS");
 
-            var mockContext = new Mock<Context>();
-            mockContext.Setup(c => c.Cities).Returns(new List<CityEntity> { cityExpected });
+            _mockContext = new Mock<Context>();
+            _mockContext.Setup(c => c.Cities).Returns(new List<CityEntity> { cityExpected });
 
-            _cityService = new CityService(mockContext.Object);
+            _cityService = new CityService(_mockContext.Object);
         }
 
         [Fact]
