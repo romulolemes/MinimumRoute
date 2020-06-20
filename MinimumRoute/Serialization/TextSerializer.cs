@@ -23,8 +23,7 @@ namespace MinimumRoute.Serialization
         {
             var resultSplit = Regex.Split(line, SEPARATE_FILED_REGEX, RegexOptions.IgnoreCase).ToList();
             object instance = Activator.CreateInstance<T>();
-            var propPublics = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance
-                /*| BindingFlags.SetField | BindingFlags.SetProperty*/);
+            var propPublics = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.CanWrite);
 
             foreach (var (propertyInfo, index) in propPublics.Select((x, i) => (x, i)))
             {
@@ -38,24 +37,38 @@ namespace MinimumRoute.Serialization
             return (T)instance;
         }
 
-        public string Deserialize(IEnumerable<PathEntity> pathEntities)
+        public string DeserializeList<T>(IEnumerable<T> list)
         {
-            StringBuilder textDeserialize = new StringBuilder();
-            foreach (var path in pathEntities)
-            {
-                foreach (var city in path.CitiesVisit)
-                {
-                    textDeserialize.Append(DeserializeField(city.Code));
-                }
-                textDeserialize.Append(DeserializeField(path.Distance));
-                textDeserialize.Append(Environment.NewLine);
-            }
-            return textDeserialize.ToString();
+            return string.Join(Environment.NewLine, list.Select(Deserialize));
         }
 
-        private string DeserializeField(object @object)
+        public string Deserialize<T>(T obj)
         {
-            return @object.ToString() + SEPARATE_FIELD;
+            if (obj is ISerializer serializer)
+            {
+                return serializer.Serializer(DeserializeField);
+            }
+            else
+            {
+                return DeserializeObject(obj);
+            }
+        }
+
+        private string DeserializeObject<T>(T obj)
+        {
+            StringBuilder content = new StringBuilder();
+            var propPublics = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.CanRead);
+
+            foreach (var propertyInfo in propPublics)
+            {
+                content.Append(DeserializeField(propertyInfo.GetValue(obj)));
+            }
+            return content.ToString();
+        }
+
+        private string DeserializeField(object obj)
+        {
+            return obj.ToString() + SEPARATE_FIELD;
         }
     }
 }

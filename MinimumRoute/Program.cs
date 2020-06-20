@@ -46,7 +46,7 @@ namespace MinimumRoute
                 routeService.CreateListRoutes(routesViewModel);
                 var paths = ordersViewModel.Select(order => finder.FindShortestPath(cityService.FindByCode(order.CityOrigin), cityService.FindByCode(order.CityDestination)));
 
-                var textPaths = textSerializer.Deserialize(paths);
+                var textPaths = textSerializer.DeserializeList(paths);
                 fileService.WriteFile("./rotas.txt", textPaths);
 
                 Log.Information("{paths}", textPaths);
