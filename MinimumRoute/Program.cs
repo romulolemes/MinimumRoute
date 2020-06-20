@@ -26,11 +26,11 @@ namespace MinimumRoute
               .MinimumLevel.Debug()
               .CreateLogger();
 
-            RegisterServices();
-
             try
             {
-                Log.Information("Starting application");
+                Log.Debug("Starting application");
+                RegisterServices();
+
                 var fileService = _serviceProvider.GetService<FileService>();
                 var routeService = _serviceProvider.GetService<RouteService>();
                 var finder = _serviceProvider.GetService<IShortestPathFinder>();
@@ -49,7 +49,7 @@ namespace MinimumRoute
                 var textPaths = textSerializer.DeserializeList(paths);
                 fileService.WriteFile("./rotas.txt", textPaths);
 
-                Log.Information("{paths}", textPaths);
+                Log.Debug("{paths}", textPaths);
 
                 Log.Information("Finished application");
             }
@@ -68,7 +68,6 @@ namespace MinimumRoute
             _serviceProvider = new ServiceCollection()
                 .AddLogging()
                 .AddSingleton(services => (ILoggerFactory)new SerilogLoggerFactory(Log.Logger, true))
-                .Configure<LoggerFilterOptions>(cfg => cfg.MinLevel = LogLevel.Debug)
                 .AddSingleton<Context>()
 
                 .AddTransient<CityRepository>()
