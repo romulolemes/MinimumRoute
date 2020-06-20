@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using MinimumRoute.Data;
 using MinimumRoute.Repository;
 using MinimumRoute.Search;
+using MinimumRoute.Search.Dijkstra;
 using MinimumRoute.Serialization;
 using MinimumRoute.Service;
 using MinimumRoute.ViewModel;
