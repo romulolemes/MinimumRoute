@@ -20,10 +20,10 @@ namespace MinimumRoute.Service
 
         public void CreateListRoutes(List<RouteViewModel> routes)
         {
-            _routeRepository.AddRange(routes.Select(CreateRoutes));
+            _routeRepository.AddRange(routes.Select(CreateRoute));
         }
 
-        private RouteEntity CreateRoutes(RouteViewModel routeViewModel)
+        private RouteEntity CreateRoute(RouteViewModel routeViewModel)
         {
             var cityOrigin = _cityRepository.FindByCode(routeViewModel.CityOrigin);
             var cityDestination = _cityRepository.FindByCode(routeViewModel.CityDestination);
