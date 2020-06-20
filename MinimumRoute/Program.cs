@@ -42,7 +42,7 @@ namespace MinimumRoute
 
                 var routesViewModel = textSerializer.SerializeList<RouteViewModel>(contentRoutes);
                 var ordersViewModel = textSerializer.SerializeList<OrderViewModel>(contentOrders);
-                
+
                 routeService.CreateListRoutes(routesViewModel);
                 var paths = ordersViewModel.Select(order => finder.FindShortestPath(cityService.FindByCode(order.CityOrigin), cityService.FindByCode(order.CityDestination)));
 
@@ -73,11 +73,11 @@ namespace MinimumRoute
 
                 .AddTransient<CityRepository>()
                 .AddTransient<RouteRepository>()
-                
+
                 .AddTransient<FileService>()
                 .AddTransient<RouteService>()
                 .AddTransient<CityService>()
-                
+
                 .AddTransient<FileSystem>()
                 .AddTransient<TextSerializer>()
                 .AddTransient<IShortestPathFinder, DijkstraAlgorithm>()
