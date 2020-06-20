@@ -1,10 +1,10 @@
 ﻿using System.IO;
 
-namespace MinimumRoute
+namespace MinimumRoute.IO
 {
-    public class FileSystem 
+    public class FileSystem
     {
-        public string ReadAllLines(string path)
+        public string ReadAllText(string path)
         {
             return File.ReadAllText(path);
         }
