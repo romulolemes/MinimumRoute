@@ -12,15 +12,15 @@ namespace MinimumRoute.Serialization
         private const string SEPARATE_FIELD = " ";
         private const string SEPARATE_FILED_REGEX = @"[\s]+";
 
-        public List<T> SerializeList<T>(string content)
+        public List<T> DeserializeList<T>(string content)
         {
             string[] lines = content.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-            return lines.Select(line => SerializeObject<T>(line)).ToList();
+            return lines.Select(line => DeserializeObject<T>(line)).ToList();
         }
 
-        public T SerializeObject<T>(string line)
+        public T DeserializeObject<T>(string line)
         {
-            var resultSplit = Regex.Split(line, SEPARATE_FILED_REGEX, RegexOptions.IgnoreCase).ToList();
+            var resultSplit = Regex.Split(line.Trim(), SEPARATE_FILED_REGEX, RegexOptions.IgnoreCase).ToList();
             object instance = Activator.CreateInstance<T>();
             var propPublics = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.CanWrite);
 
@@ -36,38 +36,39 @@ namespace MinimumRoute.Serialization
             return (T)instance;
         }
 
-        public string DeserializeList<T>(IEnumerable<T> list)
+        public string SerializeList<T>(IEnumerable<T> list)
         {
-            return string.Join(Environment.NewLine, list.Select(Deserialize));
+            return string.Join(Environment.NewLine, list.Select(SerializeObject));
         }
 
-        public string Deserialize<T>(T obj)
+        public string SerializeObject<T>(T obj)
         {
             if (obj is ISerializer serializer)
             {
-                return serializer.Serializer(DeserializeField);
+                return serializer.Serializer(SerializeField);
             }
             else
             {
-                return DeserializeObject(obj);
+                return SerializeAnyObject(obj);
             }
         }
 
-        private string DeserializeObject<T>(T obj)
+        private string SerializeAnyObject<T>(T obj)
         {
             StringBuilder content = new StringBuilder();
             var propPublics = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.CanRead);
 
             foreach (var propertyInfo in propPublics)
             {
-                content.Append(DeserializeField(propertyInfo.GetValue(obj)));
+                content.Append(SerializeField(propertyInfo.GetValue(obj)));
             }
-            return content.ToString();
+
+            return content.ToString().Trim();
         }
 
-        private string DeserializeField(object obj)
+        private string SerializeField(object obj)
         {
-            return obj.ToString() + SEPARATE_FIELD;
+            return obj?.ToString() + SEPARATE_FIELD;
         }
     }
 }

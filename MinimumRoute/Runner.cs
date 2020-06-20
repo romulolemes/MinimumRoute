@@ -48,16 +48,16 @@ namespace MinimumRoute
                 return _shortestPathFinder.FindShortestPath(cityOrigin, cityDestination);
             });
 
-            var textPaths = _textSerializer.DeserializeList(paths);
-            _fileService.WriteFile("./rotas.txt", textPaths);
+            var textPaths = _textSerializer.SerializeList(paths);
+            _fileService.WriteAllText("./rotas.txt", textPaths);
 
             _logger.LogDebug("{paths}", textPaths);
         }
 
         private List<T> ReadAndSerializer<T>(string path)
         {
-            string contentRoutes = _fileService.ReadFile(path);
-            return _textSerializer.SerializeList<T>(contentRoutes);
+            string contentRoutes = _fileService.ReadAllText(path);
+            return _textSerializer.DeserializeList<T>(contentRoutes);
         }
     }
 }

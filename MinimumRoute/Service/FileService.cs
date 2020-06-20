@@ -1,12 +1,9 @@
 ﻿using MinimumRoute.IO;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace MinimumRoute.Service
 {
-    public class FileService 
+    public class FileService
     {
         protected FileSystem _fileSystem;
 
@@ -15,12 +12,12 @@ namespace MinimumRoute.Service
             _fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
         }
 
-        public string ReadFile(string path)
+        public string ReadAllText(string path)
         {
             return _fileSystem.ReadAllText(path);
         }
 
-        public void WriteFile(string path, string content)
+        public void WriteAllText(string path, string content)
         {
             _fileSystem.WriteAllText(path, content);
         }
