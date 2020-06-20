@@ -1,32 +1,34 @@
-﻿using MinimumRoute.Model;
-using MinimumRoute.Repository;
+﻿using MinimumRoute.Data;
+using MinimumRoute.Model;
 using MinimumRoute.ViewModel;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace MinimumRoute.Service
 {
-    public class RouteService 
+    public class RouteService
     {
-        protected CityRepository _cityRepository;
-        protected RouteRepository _routeRepository;
+        protected Context _context;
+        protected CityService _cityService;
 
-        public RouteService(CityRepository cityRepository, RouteRepository routeRepository)
+        public RouteService(Context context, CityService cityService)
         {
-            _cityRepository = cityRepository ?? throw new ArgumentNullException(nameof(cityRepository));
-            _routeRepository = routeRepository ?? throw new ArgumentNullException(nameof(routeRepository));
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _cityService = cityService ?? throw new ArgumentNullException(nameof(cityService));
         }
 
         public void CreateListRoutes(List<RouteViewModel> routes)
         {
-            _routeRepository.AddRange(routes.Select(CreateRoute));
+            foreach (var route in routes)
+            {
+                _context.Routes.Add(CreateRoute(route));
+            }
         }
 
         private RouteEntity CreateRoute(RouteViewModel routeViewModel)
         {
-            var cityOrigin = _cityRepository.FindByCode(routeViewModel.CityOrigin);
-            var cityDestination = _cityRepository.FindByCode(routeViewModel.CityDestination);
+            var cityOrigin = _cityService.FindByCode(routeViewModel.CityOrigin);
+            var cityDestination = _cityService.FindByCode(routeViewModel.CityDestination);
             var distance = routeViewModel.Distance;
 
             var route = new RouteEntity(cityOrigin, cityDestination, distance);

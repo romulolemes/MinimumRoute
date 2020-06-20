@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MinimumRoute.Data;
-using MinimumRoute.Repository;
 using MinimumRoute.Search;
 using MinimumRoute.Search.Dijkstra;
 using MinimumRoute.Serialization;
@@ -51,9 +50,6 @@ namespace MinimumRoute
                 .AddSingleton(services => (ILoggerFactory)new SerilogLoggerFactory(Log.Logger, true))
                 .AddSingleton<Runner>()
                 .AddSingleton<Context>()
-
-                .AddTransient<CityRepository>()
-                .AddTransient<RouteRepository>()
 
                 .AddTransient<FileService>()
                 .AddTransient<RouteService>()
