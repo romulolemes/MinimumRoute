@@ -69,17 +69,17 @@ namespace MinimumRoute
                 .AddLogging()
                 .AddSingleton(services => (ILoggerFactory)new SerilogLoggerFactory(Log.Logger, true))
                 .Configure<LoggerFilterOptions>(cfg => cfg.MinLevel = LogLevel.Debug)
-                .AddSingleton<Context, Context>()
+                .AddSingleton<Context>()
 
-                .AddTransient<CityRepository, CityRepository>()
-                .AddTransient<RouteRepository, RouteRepository>()
+                .AddTransient<CityRepository>()
+                .AddTransient<RouteRepository>()
                 
-                .AddTransient<FileService, FileService>()
-                .AddTransient<RouteService, RouteService>()
-                .AddTransient<CityService, CityService>()
+                .AddTransient<FileService>()
+                .AddTransient<RouteService>()
+                .AddTransient<CityService>()
                 
-                .AddTransient<FileSystem, FileSystem>()
-                .AddTransient<TextSerializer, TextSerializer>()
+                .AddTransient<FileSystem>()
+                .AddTransient<TextSerializer>()
                 .AddTransient<IShortestPathFinder, DijkstraAlgorithm>()
                 .BuildServiceProvider();
         }
