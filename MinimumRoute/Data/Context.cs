@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MinimumRoute.Data
 {
-    public class Context : IContext
+    public class Context 
     {
         public Context()
         {

@@ -5,11 +5,11 @@ using System.Text;
 
 namespace MinimumRoute.Service
 {
-    public class FileService : IFileService
+    public class FileService 
     {
-        protected IFileSystem _fileSystem;
+        protected FileSystem _fileSystem;
 
-        public FileService(IFileSystem fileSystem)
+        public FileService(FileSystem fileSystem)
         {
             _fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
         }

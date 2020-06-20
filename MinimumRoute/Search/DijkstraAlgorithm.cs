@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MinimumRoute.Algoritmo
+namespace MinimumRoute.Search
 {
-    public class Dijkstra : IShortestPathFinder
+    public class DijkstraAlgorithm : IShortestPathFinder
     {
         private class Weight
         {
@@ -46,7 +46,7 @@ namespace MinimumRoute.Algoritmo
             public void RegisterVisitTo(CityEntity node)
             {
                 if (!_visiteds.Contains(node))
-                    _visiteds.Add((node));
+                    _visiteds.Add(node);
             }
 
             public bool WasVisited(CityEntity node)
@@ -142,7 +142,7 @@ namespace MinimumRoute.Algoritmo
 
                     var neighborWeight = control.QueryWeight(neighborhoodInfo.Node);
 
-                    var probableWeight = (visitingNodeWeight.Value + neighborhoodInfo.WeightToNode);
+                    var probableWeight = visitingNodeWeight.Value + neighborhoodInfo.WeightToNode;
                     if (neighborWeight.Value > probableWeight)
                     {
                         control.UpdateWeight(neighborhoodInfo.Node, new Weight(visitingNode, probableWeight));

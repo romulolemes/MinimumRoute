@@ -3,11 +3,11 @@ using MinimumRoute.Repository;
 
 namespace MinimumRoute.Service
 {
-    public class CityService : ICityService
+    public class CityService 
     {
-        public ICityRepository _cityRepository;
+        public CityRepository _cityRepository;
 
-        public CityService(ICityRepository cityRepository)
+        public CityService(CityRepository cityRepository)
         {
             _cityRepository = cityRepository;
         }

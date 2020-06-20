@@ -7,12 +7,12 @@ using System.Linq;
 
 namespace MinimumRoute.Service
 {
-    public class RouteService : IRouteService
+    public class RouteService 
     {
-        protected ICityRepository _cityRepository;
-        protected IRouteRepository _routeRepository;
+        protected CityRepository _cityRepository;
+        protected RouteRepository _routeRepository;
 
-        public RouteService(ICityRepository cityRepository, IRouteRepository routeRepository)
+        public RouteService(CityRepository cityRepository, RouteRepository routeRepository)
         {
             _cityRepository = cityRepository ?? throw new ArgumentNullException(nameof(cityRepository));
             _routeRepository = routeRepository ?? throw new ArgumentNullException(nameof(routeRepository));

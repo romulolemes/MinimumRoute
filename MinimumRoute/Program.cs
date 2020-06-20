@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using MinimumRoute.Algoritmo;
-using MinimumRoute.Binder;
 using MinimumRoute.Data;
 using MinimumRoute.Repository;
+using MinimumRoute.Search;
+using MinimumRoute.Serialization;
 using MinimumRoute.Service;
 using MinimumRoute.ViewModel;
 using Serilog;
@@ -30,27 +30,27 @@ namespace MinimumRoute
             try
             {
                 Log.Information("Starting application");
-                var fileService = _serviceProvider.GetService<IFileService>();
-                var binderModel = _serviceProvider.GetService<IBinderModel>();
-                var routeService = _serviceProvider.GetService<IRouteService>();
-                var context = _serviceProvider.GetService<IContext>();
+                var fileService = _serviceProvider.GetService<FileService>();
+                var routeService = _serviceProvider.GetService<RouteService>();
                 var finder = _serviceProvider.GetService<IShortestPathFinder>();
-                var cityService = _serviceProvider.GetService<ICityService>();
+                var cityService = _serviceProvider.GetService<CityService>();
+                var textSerializer = _serviceProvider.GetService<TextSerializer>();
 
-                var streamRoutes = fileService.ReadFile("./trechos.txt");
-                var streamOrders = fileService.ReadFile("./encomendas.txt");
+                var contentRoutes = fileService.ReadFile("./trechos.txt");
+                var contentOrders = fileService.ReadFile("./encomendas.txt");
 
-                var routesViewModel = binderModel.SerializeList<RouteViewModel>(streamRoutes);
-                var ordersViewModel = binderModel.SerializeList<OrderViewModel>(streamOrders);
+                var routesViewModel = textSerializer.SerializeList<RouteViewModel>(contentRoutes);
+                var ordersViewModel = textSerializer.SerializeList<OrderViewModel>(contentOrders);
                 
-
                 routeService.CreateListRoutes(routesViewModel);
                 var paths = ordersViewModel.Select(order => finder.FindShortestPath(cityService.FindByCode(order.CityOrigin), cityService.FindByCode(order.CityDestination)));
 
-                var textPaths = binderModel.Deserialize(paths);
+                var textPaths = textSerializer.Deserialize(paths);
                 fileService.WriteFile("./rotas.txt", textPaths);
 
-                Log.Information("All done!");
+                Log.Information("{paths}", textPaths);
+
+                Log.Information("Finished application");
             }
             catch (Exception ex)
             {
@@ -68,18 +68,18 @@ namespace MinimumRoute
                 .AddLogging()
                 .AddSingleton(services => (ILoggerFactory)new SerilogLoggerFactory(Log.Logger, true))
                 .Configure<LoggerFilterOptions>(cfg => cfg.MinLevel = LogLevel.Debug)
-                .AddSingleton<IContext, Context>()
+                .AddSingleton<Context, Context>()
 
-                .AddTransient<ICityRepository, CityRepository>()
-                .AddTransient<IRouteRepository, RouteRepository>()
+                .AddTransient<CityRepository, CityRepository>()
+                .AddTransient<RouteRepository, RouteRepository>()
                 
-                .AddTransient<IFileService, FileService>()
-                .AddTransient<IRouteService, RouteService>()
-                .AddTransient<ICityService, CityService>()
+                .AddTransient<FileService, FileService>()
+                .AddTransient<RouteService, RouteService>()
+                .AddTransient<CityService, CityService>()
                 
-                .AddTransient<IFileSystem, FileSystem>()
-                .AddTransient<IBinderModel, BinderModel>()
-                .AddTransient<IShortestPathFinder, Dijkstra>()
+                .AddTransient<FileSystem, FileSystem>()
+                .AddTransient<TextSerializer, TextSerializer>()
+                .AddTransient<IShortestPathFinder, DijkstraAlgorithm>()
                 .BuildServiceProvider();
         }
     }

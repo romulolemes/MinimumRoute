@@ -5,11 +5,11 @@ using System.Linq;
 
 namespace MinimumRoute.Repository
 {
-    public class CityRepository : ICityRepository
+    public class CityRepository 
     {
-        protected IContext _context;
+        protected Context _context;
 
-        public CityRepository(IContext context)
+        public CityRepository(Context context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }

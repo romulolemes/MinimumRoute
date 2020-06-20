@@ -1,27 +1,25 @@
-﻿using Microsoft.VisualBasic;
-using MinimumRoute.Entity;
+﻿using MinimumRoute.Entity;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace MinimumRoute.Binder
+namespace MinimumRoute.Serialization
 {
-    public class BinderModel : IBinderModel
+    public class TextSerializer
     {
         private const string SEPARATE_FIELD = " ";
         private const string SEPARATE_FILED_REGEX = @"[\s]+";
 
-        public List<T> SerializeList<T>(string allText)
+        public List<T> SerializeList<T>(string content)
         {
-            string[] lines = allText.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-            return lines.Select(line => BindModel<T>(line)).ToList();
+            string[] lines = content.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+            return lines.Select(line => SerializeObject<T>(line)).ToList();
         }
 
-        public T BindModel<T>(string line)
+        public T SerializeObject<T>(string line)
         {
             var resultSplit = Regex.Split(line, SEPARATE_FILED_REGEX, RegexOptions.IgnoreCase).ToList();
             object instance = Activator.CreateInstance<T>();

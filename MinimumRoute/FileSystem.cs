@@ -2,7 +2,7 @@
 
 namespace MinimumRoute
 {
-    public class FileSystem : IFileSystem
+    public class FileSystem 
     {
         public string ReadAllLines(string path)
         {

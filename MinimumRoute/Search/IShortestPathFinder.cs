@@ -1,10 +1,7 @@
 ﻿using MinimumRoute.Entity;
 using MinimumRoute.Model;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace MinimumRoute.Algoritmo
+namespace MinimumRoute.Search
 {
     public interface IShortestPathFinder
     {

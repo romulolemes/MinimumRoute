@@ -5,11 +5,11 @@ using System.Collections.Generic;
 
 namespace MinimumRoute.Repository
 {
-    public class RouteRepository : IRouteRepository
+    public class RouteRepository 
     {
-        protected IContext _context;
+        protected Context _context;
 
-        public RouteRepository(IContext context)
+        public RouteRepository(Context context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
