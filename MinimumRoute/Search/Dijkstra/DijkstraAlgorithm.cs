@@ -1,13 +1,14 @@
 ﻿using MinimumRoute.Entity;
 using MinimumRoute.Model;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MinimumRoute.Search.Dijkstra
 {
     public class DijkstraAlgorithm : IShortestPathFinder
     {
-        public PathEntity FindShortestPath(CityEntity origin, CityEntity destination)
+        public PathEntity FindShortestPath(Node origin, Node destination, Func<Node, IEnumerable<NeighborhoodInfo>> funcGetNeighbors)
         {
             var vistingControl = new VisitingDataControl();
             vistingControl.UpdateWeight(origin, new Weight(null, 0));
@@ -19,7 +20,7 @@ namespace MinimumRoute.Search.Dijkstra
                 var visitingNodeWeight = vistingControl.QueryWeight(visitingNode);
                 vistingControl.RegisterVisitTo(visitingNode);
 
-                foreach (var neighborhoodInfo in vistingControl.GetNeighbors(visitingNode))
+                foreach (var neighborhoodInfo in funcGetNeighbors(visitingNode))
                 {
                     if (!vistingControl.WasVisited(neighborhoodInfo.Node))
                     {
@@ -42,7 +43,7 @@ namespace MinimumRoute.Search.Dijkstra
             {
                 pathEntity = new PathEntity
                 {
-                    CitiesVisit = vistingControl.ComputedPathToOrigin(destination).Reverse().ToList(),
+                    NodeVisit = vistingControl.ComputedPathToOrigin(destination).Reverse().ToList(),
                     Distance = vistingControl.QueryWeight(destination).Value
                 };
             }

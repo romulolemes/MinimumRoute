@@ -4,10 +4,10 @@ namespace MinimumRoute.Search.Dijkstra
 {
     public struct NeighborhoodInfo
     {
-        public CityEntity Node { get; }
+        public Node Node { get; }
         public int WeightToNode { get; }
 
-        public NeighborhoodInfo(CityEntity node, int weightToNode)
+        public NeighborhoodInfo(Node node, int weightToNode)
         {
             Node = node;
             WeightToNode = weightToNode;

@@ -4,10 +4,10 @@ namespace MinimumRoute.Search.Dijkstra
 {
     public class Weight
     {
-        public CityEntity Origin { get; }
+        public Node Origin { get; }
         public int Value { get; }
 
-        public Weight(CityEntity origin, int value)
+        public Weight(Node origin, int value)
         {
             Origin = origin;
             Value = value;

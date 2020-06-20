@@ -1,4 +1,5 @@
 ﻿using MinimumRoute.Model;
+using MinimumRoute.Search.Dijkstra;
 using MinimumRoute.Serialization;
 using System;
 using System.Collections.Generic;
@@ -10,19 +11,19 @@ namespace MinimumRoute.Entity
     {
         public PathEntity()
         {
-            CitiesVisit = new HashSet<CityEntity>();
+            NodeVisit = new HashSet<Node>();
         }
 
-        public ICollection<CityEntity> CitiesVisit { get; set; }
+        public ICollection<Node> NodeVisit { get; set; }
         public int? Distance { get; set; }
         public string Test { set { } }
 
         public string Serializer(Func<object, string> deserializeField)
         {
             StringBuilder textDeserialize = new StringBuilder();
-            foreach (var city in CitiesVisit)
+            foreach (var node in NodeVisit)
             {
-                textDeserialize.Append(deserializeField(city.Code));
+                textDeserialize.Append(deserializeField(node.Code));
             }
             textDeserialize.Append(deserializeField(Distance));
 
@@ -31,7 +32,7 @@ namespace MinimumRoute.Entity
 
         public override string ToString()
         {
-            return $"{string.Join(" ", CitiesVisit)} {Distance}";
+            return $"{string.Join(" ", NodeVisit)} {Distance}";
         }
     }
 }

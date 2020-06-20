@@ -17,13 +17,14 @@ namespace MinimumRoute.Service
             _cityService = cityService ?? throw new ArgumentNullException(nameof(cityService));
         }
 
-        public void CreateListRoutes(List<RouteViewModel> routes)
+        public IEnumerable<RouteEntity> CreateListRoutes(List<RouteViewModel> routes)
         {
+            var routesCreated = new List<RouteEntity>();
             foreach (var route in routes)
             {
-                var routeEntity = CreateRoute(route);
-                _context.Routes.Add(routeEntity);
+                routesCreated.Add(CreateRoute(route));
             }
+            return routesCreated;
         }
 
         public RouteEntity CreateRoute(RouteViewModel routeViewModel)
@@ -32,10 +33,9 @@ namespace MinimumRoute.Service
             var cityDestination = _cityService.FindByCode(routeViewModel.CityDestination);
             var distance = routeViewModel.Distance;
 
-            var route = new RouteEntity(cityOrigin, cityDestination, distance);
-            cityOrigin.RouteOrigin.Add(route);
-            cityDestination.RouteDestination.Add(route);
-            return route;
+            var routeEntity = new RouteEntity(cityOrigin, cityDestination, distance);
+            _context.Routes.Add(routeEntity);
+            return routeEntity;
         }
     }
 }

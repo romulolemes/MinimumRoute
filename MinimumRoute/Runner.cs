@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
+using MinimumRoute.Model;
 using MinimumRoute.Search;
+using MinimumRoute.Search.Dijkstra;
 using MinimumRoute.Serialization;
 using MinimumRoute.Service;
 using MinimumRoute.ViewModel;
@@ -39,13 +41,13 @@ namespace MinimumRoute
             List<RouteViewModel> routesViewModel = ReadAndSerializer<RouteViewModel>("./trechos.txt");
             List<OrderViewModel> ordersViewModel = ReadAndSerializer<OrderViewModel>("./encomendas.txt");
 
-            _routeService.CreateListRoutes(routesViewModel);
+            var routes = _routeService.CreateListRoutes(routesViewModel);
 
             var paths = ordersViewModel.Select(order =>
             {
                 var cityOrigin = _cityService.FindByCode(order.CityOrigin);
                 var cityDestination = _cityService.FindByCode(order.CityDestination);
-                return _shortestPathFinder.FindShortestPath(cityOrigin, cityDestination);
+                return _shortestPathFinder.FindShortestPath(cityOrigin, cityDestination, s => GetNeighbors(s, routes));
             });
 
             var textPaths = _textSerializer.SerializeList(paths);
@@ -58,6 +60,12 @@ namespace MinimumRoute
         {
             string contentRoutes = _fileService.ReadAllText(path);
             return _textSerializer.DeserializeList<T>(contentRoutes);
+        }
+
+        public IEnumerable<NeighborhoodInfo> GetNeighbors(Node visitingNode, IEnumerable<RouteEntity> routes)
+        {
+            return routes.Where(r => r.CityOrigin.Equals(visitingNode))
+                .Select(r => new NeighborhoodInfo(r.CityDestination, r.Distance));
         }
     }
 }

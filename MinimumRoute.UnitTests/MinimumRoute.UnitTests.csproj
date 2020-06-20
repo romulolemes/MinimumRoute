@@ -18,4 +18,8 @@
     <ProjectReference Include="..\MinimumRoute\MinimumRoute.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Search\Dijkstra\" />
+  </ItemGroup>
+
 </Project>
