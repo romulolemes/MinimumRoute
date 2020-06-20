@@ -16,7 +16,6 @@ namespace MinimumRoute.Entity
 
         public ICollection<Node> NodeVisit { get; set; }
         public int? Distance { get; set; }
-        public string Test { set { } }
 
         public string Serializer(Func<object, string> deserializeField)
         {
