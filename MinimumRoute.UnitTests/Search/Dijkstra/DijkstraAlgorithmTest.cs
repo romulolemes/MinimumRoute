@@ -96,8 +96,7 @@ namespace MinimumRoute.UnitTests.Search.Dijkstra
 
         private static Func<Node, IEnumerable<NeighborhoodInfo>> GetNeighboardhood(IEnumerable<RouteEntity> routes)
         {
-            return visitingNode => routes.Where(r => r.CityOrigin.Equals(visitingNode))
-                .Select(r => new NeighborhoodInfo(r.CityDestination, r.Distance));
+            return n => Runner.GetNeighbors(n, routes);
         }
     }
 }

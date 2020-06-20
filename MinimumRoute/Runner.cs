@@ -62,7 +62,7 @@ namespace MinimumRoute
             return _textSerializer.DeserializeList<T>(contentRoutes);
         }
 
-        public IEnumerable<NeighborhoodInfo> GetNeighbors(Node visitingNode, IEnumerable<RouteEntity> routes)
+        public static IEnumerable<NeighborhoodInfo> GetNeighbors(Node visitingNode, IEnumerable<RouteEntity> routes)
         {
             return routes.Where(r => r.CityOrigin.Equals(visitingNode))
                 .Select(r => new NeighborhoodInfo(r.CityDestination, r.Distance));
