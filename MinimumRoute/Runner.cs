@@ -7,6 +7,7 @@ using MinimumRoute.Service;
 using MinimumRoute.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace MinimumRoute
@@ -38,22 +39,35 @@ namespace MinimumRoute
 
         public void Run()
         {
-            List<RouteViewModel> routesViewModel = ReadAndSerializer<RouteViewModel>("./trechos.txt");
-            List<OrderViewModel> ordersViewModel = ReadAndSerializer<OrderViewModel>("./encomendas.txt");
-
-            var routes = _routeService.CreateListRoutes(routesViewModel);
-
-            var paths = ordersViewModel.Select(order =>
+            try
             {
-                var cityOrigin = _cityService.FindByCode(order.CityOrigin);
-                var cityDestination = _cityService.FindByCode(order.CityDestination);
-                return _shortestPathFinder.FindShortestPath(cityOrigin, cityDestination, s => GetNeighbors(s, routes));
-            });
+                List<RouteViewModel> routesViewModel = ReadAndSerializer<RouteViewModel>(GetPathFile("trechos.txt"));
+                List<OrderViewModel> ordersViewModel = ReadAndSerializer<OrderViewModel>(GetPathFile("encomendas.txt"));
 
-            var textPaths = _textSerializer.SerializeList(paths);
-            _fileService.WriteAllText("./rotas.txt", textPaths);
+                var routes = _routeService.CreateListRoutes(routesViewModel);
 
-            _logger.LogDebug("{paths}", textPaths);
+                var paths = ordersViewModel.Select(order =>
+                {
+                    var cityOrigin = _cityService.FindByCode(order.CityOrigin);
+                    var cityDestination = _cityService.FindByCode(order.CityDestination);
+                    return _shortestPathFinder.FindShortestPath(cityOrigin, cityDestination, s => GetNeighbors(s, routes));
+                });
+
+                var textPaths = _textSerializer.SerializeList(paths);
+                _fileService.WriteAllText(GetPathFile("rotas.txt"), textPaths);
+
+                _logger.LogDebug("{paths}", textPaths);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                _fileService.WriteAllText(GetPathFile("rotas.txt"), "Could not calculate directions. " + e.Message);
+            }
+        }
+
+        private static string GetPathFile(string fileName)
+        {
+            return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
         }
 
         private List<T> ReadAndSerializer<T>(string path)
